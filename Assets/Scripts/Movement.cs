@@ -6,6 +6,8 @@ class Movement : MonoBehaviour
     public float moveSpeed = 3f;
     public float gridSize = 1f;
 
+    public static GameController gameController;
+
     public Vector2 boardDimentions;
     private enum Orientation
     {
@@ -73,7 +75,7 @@ class Movement : MonoBehaviour
           
             yield return null;
         }
-
+        gameController.MovementFinished();
         isMoving = false;
         yield return 0;
     }
@@ -123,6 +125,7 @@ class Movement : MonoBehaviour
                yield return null;
            }
        }
+       gameController.MovementFinished();
         isMoving = false;
         yield return 0;
     }
@@ -219,20 +222,24 @@ class Movement : MonoBehaviour
             squareNum -= 1;
 
             int y = squareNum / (int)(boardDimentions.y);
+
             int x = squareNum % (int)(boardDimentions.x);//(squareNum + ((int)boardDimentions.x * y));
+
+       if(y%2==1)
+       {
+           x =( (int)boardDimentions.x - x)-1;
+       }
 
             return new Vector2(x, y);
 
     }
 
 
-    public void throughDice(int diceMaxNum)
+    public void MoveForwardBy(int distance)
     {
         if (!isMoving)
-        {
-            int diceNum = Random.Range(1, diceMaxNum + 1);
-            Debug.Log("diceNum " + diceNum);
-            StartCoroutine(moveBy(diceNum));
+        {  
+            StartCoroutine(moveBy(distance));
         }
     }
 
